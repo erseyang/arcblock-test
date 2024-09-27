@@ -3,10 +3,10 @@ import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
 type User = {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
+    id?: number;
+    name?: string;
+    email?: string;
+    phone?: string;
 };
 
 function Profile() {
@@ -21,7 +21,7 @@ function Profile() {
     const [isEditing, setIsEditing] = useState(false);
 
     const fetchUser = async (userId: string) => {
-        const user = await fetch('/api/user/' + userId, {
+        await fetch('/api/user/' + userId, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ function Profile() {
 
     // 取单个用户信息
     useEffect(() => {
-        fetchUser(param?.id);
+        fetchUser(param?.id!);
     }, []);
 
     // 切换编辑模式
@@ -48,13 +48,13 @@ function Profile() {
         setIsEditing(!isEditing);
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const {name, value} = e.target;
         // 发送请求到后台
         setUser({...user, [name]: value});
     };
 
-    const handlerSubmit = (e) => {
+    const handlerSubmit = (e: any) => {
         e.preventDefault();
         setIsEditing(false);
         // 更新后台的数据

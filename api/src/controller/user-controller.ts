@@ -9,14 +9,34 @@ export async function getUsers(_: Request, res: Response) {
   return res.send(users);
 }
 
-export async function getUserById(userId: number, res: Response) {
+/**
+ * 通过ID获取用户信息
+ * @param userId
+ * @param res
+ */
+export async function getUserById(req: Request, res: Response) {
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).send({
+      message: '数据不对',
+    });
+  }
+  const userId = parseInt(id, 10);
+  if (Number.isNaN(userId)) {
+    return res.status(400).send({
+      message: '数据不对',
+    });
+  }
   const userRepository = dbConnection.getRepository(User);
-  // const userId = req.body;
-  // logger.info(userId);
   const user = await userRepository.findOneBy({id:userId})
   return res.send(user);
 }
 
+/**
+ * 添加用户
+ * @param req
+ * @param res
+ */
 export async function add(req: Request, res: Response) {
   const userRepository = dbConnection.getRepository(User);
   const user = new User();
@@ -27,6 +47,11 @@ export async function add(req: Request, res: Response) {
   res.status(200).send({'message': '添加成功'})
 }
 
+/**
+ * 修改用户
+ * @param req
+ * @param res
+ */
 export async function editUser(req: Request, res: Response) {
   const userRepository = dbConnection.getRepository(User);
   const userId = req.body.id;
